@@ -7,37 +7,81 @@
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
     h1 { color: #333; }
-    .question, .feedback { margin-top: 20px; }
+    .question, .feedback, .part { margin-top: 20px; }
     input, button { margin-top: 10px; padding: 5px; font-size: 1em; }
+    .part-title { font-weight: bold; margin-top: 30px; }
   </style>
 </head>
 <body>
   <h1>Diffraction Wavelength Calculator</h1>
+
   <div class="question">
     <p id="question-text">Loading question...</p>
-    <input type="number" id="answer" step="any" placeholder="Enter wavelength in meters">
-    <button onclick="checkAnswer()">Submit</button>
-    <div class="feedback" id="feedback"></div>
-    <button onclick="newQuestion()">Next Question</button>
+
+    <div class="part">
+      <p class="part-title">Part a) Calculate the slit spacing <em>d</em> in meters</p>
+      <input type="number" id="d-answer" step="any" placeholder="Enter d in meters">
+      <button onclick="checkDAnswer()">Check d</button>
+      <button onclick="revealD()">Give up</button>
+      <div class="feedback" id="d-feedback"></div>
+    </div>
+
+    <div class="part">
+      <p class="part-title">Part b) Calculate the wavelength λ</p>
+      <input type="number" id="answer" step="any" placeholder="Enter wavelength in meters">
+      <button onclick="checkAnswer()">Check wavelength</button>
+      <div class="feedback" id="feedback"></div>
+      <button onclick="newQuestion()">Next Question</button>
+    </div>
   </div>
 
   <script>
-    let x, d, L, lambda;
+    let x, d, L, n, lambda, linesPerMm, dCalculated;
 
     function newQuestion() {
-      // Generate random values in metres
+      // Generate random values
       x = (Math.random() * 5 + 1) / 1000; // 1 - 6 mm
       d = (Math.random() * 5 + 1) / 100000; // 10 - 60 micrometres
       L = (Math.random() * 1 + 0.5); // 0.5 - 1.5 m
+      n = Math.floor(Math.random() * 3) + 1; // order n = 1 to 3
 
-      lambda = (x * d) / L;
-      lambda = Number(lambda.toPrecision(3)); // limit to 3 sig figs
+      lambda = (x * d) / (n * L);
+      lambda = Number(lambda.toPrecision(3));
+
+      linesPerMm = Math.round(1 / (d * 1000)); // convert d to lines/mm
+      dCalculated = 1 / (linesPerMm * 1000); // convert back to meters
 
       document.getElementById("question-text").innerText = 
-        `x = ${x.toFixed(4)} m, d = ${d.toFixed(6)} m, L = ${L.toFixed(2)} m. Calculate the wavelength λ.`;
+        `x = ${x.toFixed(4)} m, L = ${L.toFixed(2)} m, n = ${n}, grating = ${linesPerMm} lines/mm.\n` +
+        `Part a) Use the lines/mm to calculate d.`;
+
+      document.getElementById("d-answer").value = "";
+      document.getElementById("d-feedback").innerText = "";
 
       document.getElementById("answer").value = "";
       document.getElementById("feedback").innerText = "";
+    }
+
+    function checkDAnswer() {
+      const userD = parseFloat(document.getElementById("d-answer").value);
+      const errorMargin = dCalculated * 0.02;
+
+      if (isNaN(userD)) {
+        document.getElementById("d-feedback").innerText = "Please enter a number for d.";
+        return;
+      }
+
+      if (Math.abs(userD - dCalculated) <= errorMargin) {
+        document.getElementById("d-feedback").innerText = "Correct value for d!";
+      } else {
+        document.getElementById("d-feedback").innerText = 
+          `Incorrect. Try again or click 'Give up' to see the correct d.`;
+      }
+    }
+
+    function revealD() {
+      document.getElementById("d-answer").value = dCalculated.toExponential(3);
+      document.getElementById("d-feedback").innerText = `The correct value for d is ${dCalculated.toExponential(3)} m.`;
     }
 
     function checkAnswer() {
@@ -45,7 +89,7 @@
       const errorMargin = lambda * 0.02; // 2% margin
 
       if (isNaN(userAnswer)) {
-        document.getElementById("feedback").innerText = "Please enter a number.";
+        document.getElementById("feedback").innerText = "Please enter a number for wavelength.";
         return;
       }
 
