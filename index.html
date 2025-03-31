@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wavelength Calculator</title>
+  <title>Diffraction Equation Practice</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
     h1 { color: #333; }
@@ -13,92 +13,91 @@
   </style>
 </head>
 <body>
-  <h1>Diffraction Wavelength Calculator</h1>
+  <h1>Diffraction Equation Practice</h1>
 
   <div class="question">
     <p id="question-text">Loading question...</p>
 
     <div class="part">
-      <p class="part-title">Part a) Calculate the slit spacing <em>d</em> in meters</p>
-      <input type="number" id="d-answer" step="any" placeholder="Enter d in meters">
-      <button onclick="checkDAnswer()">Check d</button>
-      <button onclick="revealD()">Give up</button>
-      <div class="feedback" id="d-feedback"></div>
-    </div>
-
-    <div class="part">
-      <p class="part-title">Part b) Use the equation <em>nλ = d sin(θ)</em> to calculate the wavelength λ</p>
-      <input type="number" id="answer" step="any" placeholder="Enter wavelength in meters">
-      <button onclick="checkAnswer()">Check wavelength</button>
+      <p class="part-title" id="question-prompt"></p>
+      <input type="number" id="user-answer" step="any" placeholder="Enter your answer">
+      <button onclick="checkAnswer()">Check answer</button>
+      <button onclick="revealAnswer()">Give up</button>
       <div class="feedback" id="feedback"></div>
       <button onclick="newQuestion()">Next Question</button>
     </div>
   </div>
 
   <script>
-    let theta, d, n, lambda, linesPerMm, dCalculated;
+    let theta, d, n, lambda;
+    let variableToFind, correctAnswer;
 
     function newQuestion() {
-      // Generate random values
-      theta = (Math.random() * 15 + 5); // angle in degrees, 5° to 20°
+      // Generate base values
+      theta = (Math.random() * 15 + 5); // angle in degrees
       d = (Math.random() * 5 + 1) / 100000; // 10 - 60 micrometres
-      n = Math.floor(Math.random() * 3) + 1; // order n = 1 to 3
+      n = Math.floor(Math.random() * 3) + 1; // 1 to 3
 
       const thetaRad = theta * Math.PI / 180;
       lambda = (d * Math.sin(thetaRad)) / n;
-      lambda = Number(lambda.toPrecision(3));
 
-      linesPerMm = Math.round(1 / (d * 1000)); // convert d to lines/mm
-      dCalculated = 1 / (linesPerMm * 1000); // convert back to meters
+      // Choose variable to find
+      const variables = ['lambda', 'd', 'theta'];
+      variableToFind = variables[Math.floor(Math.random() * variables.length)];
 
-      document.getElementById("question-text").innerText = 
-        `θ = ${theta.toFixed(1)}°, n = ${n}, grating = ${linesPerMm} lines/mm.\n` +
-        `Part a) Use the lines/mm to calculate d.`;
+      let questionText = `n = ${n}, grating = ${Math.round(1 / (d * 1000))} lines/mm`;
 
-      document.getElementById("d-answer").value = "";
-      document.getElementById("d-feedback").innerText = "";
+      if (variableToFind !== 'theta') {
+        questionText += `, θ = ${theta.toFixed(1)}°`;
+      }
+      if (variableToFind !== 'd') {
+        questionText += `, λ = ${lambda.toExponential(3)} m`;
+      }
+      if (variableToFind !== 'lambda') {
+        questionText += `, d = ${(d).toExponential(3)} m`;
+      }
 
-      document.getElementById("answer").value = "";
+      document.getElementById("question-text").innerText = questionText;
+
+      let promptText = '';
+      if (variableToFind === 'lambda') {
+        correctAnswer = lambda;
+        promptText = "Calculate the wavelength λ (in meters)";
+      } else if (variableToFind === 'd') {
+        correctAnswer = d;
+        promptText = "Calculate the slit spacing d (in meters)";
+      } else if (variableToFind === 'theta') {
+        correctAnswer = theta;
+        promptText = "Calculate the angle θ (in degrees)";
+      }
+
+      document.getElementById("question-prompt").innerText = promptText;
+      document.getElementById("user-answer").value = "";
       document.getElementById("feedback").innerText = "";
     }
 
-    function checkDAnswer() {
-      const userD = parseFloat(document.getElementById("d-answer").value);
-      const errorMargin = dCalculated * 0.02;
-
-      if (isNaN(userD)) {
-        document.getElementById("d-feedback").innerText = "Please enter a number for d.";
-        return;
-      }
-
-      if (Math.abs(userD - dCalculated) <= errorMargin) {
-        document.getElementById("d-feedback").innerText = "Correct value for d!";
-      } else {
-        document.getElementById("d-feedback").innerText = 
-          `Incorrect. Try again or click 'Give up' to see the correct d.`;
-      }
-    }
-
-    function revealD() {
-      document.getElementById("d-answer").value = dCalculated.toExponential(3);
-      document.getElementById("d-feedback").innerText = `The correct value for d is ${dCalculated.toExponential(3)} m.`;
-    }
-
     function checkAnswer() {
-      const userAnswer = parseFloat(document.getElementById("answer").value);
-      const errorMargin = lambda * 0.02; // 2% margin
-
+      const userAnswer = parseFloat(document.getElementById("user-answer").value);
       if (isNaN(userAnswer)) {
-        document.getElementById("feedback").innerText = "Please enter a number for wavelength.";
+        document.getElementById("feedback").innerText = "Please enter a number.";
         return;
       }
 
-      if (Math.abs(userAnswer - lambda) <= errorMargin) {
+      let errorMargin = variableToFind === 'theta' ? 0.5 : correctAnswer * 0.02;
+
+      if (Math.abs(userAnswer - correctAnswer) <= errorMargin) {
         document.getElementById("feedback").innerText = "Correct! Well done.";
       } else {
-        document.getElementById("feedback").innerText = 
-          `Incorrect. The correct wavelength was approximately ${lambda} m.`;
+        document.getElementById("feedback").innerText = "Incorrect. Try again or click 'Give up'.";
       }
+    }
+
+    function revealAnswer() {
+      const displayValue = variableToFind === 'theta'
+        ? `${correctAnswer.toFixed(1)}°`
+        : `${correctAnswer.toExponential(3)} m`;
+      document.getElementById("feedback").innerText = `The correct answer is ${displayValue}.`;
+      document.getElementById("user-answer").value = '';
     }
 
     newQuestion();
