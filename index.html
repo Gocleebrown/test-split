@@ -18,6 +18,14 @@
   <div class="question">
     <p id="question-text">Loading question...</p>
 
+    <div class="part" id="part-a" style="display: none;">
+      <p class="part-title">Part a) Calculate the slit spacing <em>d</em> in meters from the grating lines/mm</p>
+      <input type="number" id="d-answer" step="any" placeholder="Enter d in meters">
+      <button onclick="checkDAnswer()">Check d</button>
+      <button onclick="revealD()">Give up</button>
+      <div class="feedback" id="d-feedback"></div>
+    </div>
+
     <div class="part">
       <p class="part-title" id="question-prompt"></p>
       <input type="number" id="user-answer" step="any" placeholder="Enter your answer">
@@ -29,51 +37,75 @@
   </div>
 
   <script>
-    let theta, d, n, lambda;
-    let variableToFind, correctAnswer;
+    let theta, d, n, lambda, linesPerMm;
+    let variableToFind, correctAnswer, dCalculated;
+
+    function formatUnit(value, unit) {
+      if (unit === 'mm') return `${(value * 1000).toFixed(3)} mm`;
+      if (unit === 'nm') return `${(value * 1e9).toFixed(1)} nm`;
+      return `${value.toFixed(3)} m`;
+    }
 
     function newQuestion() {
-      // Generate base values
-      theta = (Math.random() * 15 + 5); // angle in degrees
-      d = (Math.random() * 5 + 1) / 100000; // 10 - 60 micrometres
-      n = Math.floor(Math.random() * 3) + 1; // 1 to 3
+      theta = (Math.random() * 15 + 5); // degrees
+      d = (Math.random() * 5 + 1) / 100000; // 10–60 micrometres
+      linesPerMm = Math.round(1 / (d * 1000));
+      dCalculated = 1 / (linesPerMm * 1000);
+      n = Math.floor(Math.random() * 3) + 1;
 
       const thetaRad = theta * Math.PI / 180;
-      lambda = (d * Math.sin(thetaRad)) / n;
+      lambda = (dCalculated * Math.sin(thetaRad)) / n;
 
-      // Choose variable to find
       const variables = ['lambda', 'd', 'theta'];
       variableToFind = variables[Math.floor(Math.random() * variables.length)];
 
-      let questionText = `n = ${n}, grating = ${Math.round(1 / (d * 1000))} lines/mm`;
-
-      if (variableToFind !== 'theta') {
-        questionText += `, θ = ${theta.toFixed(1)}°`;
-      }
-      if (variableToFind !== 'd') {
-        questionText += `, λ = ${lambda.toExponential(3)} m`;
-      }
-      if (variableToFind !== 'lambda') {
-        questionText += `, d = ${(d).toExponential(3)} m`;
-      }
+      let questionText = `n = ${n}, grating = ${linesPerMm} lines/mm`;
+      if (variableToFind !== 'theta') questionText += `, θ = ${theta.toFixed(1)}°`;
+      if (variableToFind !== 'lambda') questionText += `, λ = ${formatUnit(lambda, 'nm')}`;
 
       document.getElementById("question-text").innerText = questionText;
 
       let promptText = '';
       if (variableToFind === 'lambda') {
         correctAnswer = lambda;
-        promptText = "Calculate the wavelength λ (in meters)";
+        promptText = "Part b) Calculate the wavelength λ (in meters)";
       } else if (variableToFind === 'd') {
-        correctAnswer = d;
+        correctAnswer = dCalculated;
         promptText = "Calculate the slit spacing d (in meters)";
       } else if (variableToFind === 'theta') {
         correctAnswer = theta;
-        promptText = "Calculate the angle θ (in degrees)";
+        promptText = "Part b) Calculate the angle θ (in degrees)";
       }
 
       document.getElementById("question-prompt").innerText = promptText;
       document.getElementById("user-answer").value = "";
       document.getElementById("feedback").innerText = "";
+
+      // Show or hide part a based on the target
+      document.getElementById("part-a").style.display = variableToFind === 'd' ? 'none' : 'block';
+      document.getElementById("d-answer").value = "";
+      document.getElementById("d-feedback").innerText = "";
+    }
+
+    function checkDAnswer() {
+      const userD = parseFloat(document.getElementById("d-answer").value);
+      const margin = dCalculated * 0.02;
+
+      if (isNaN(userD)) {
+        document.getElementById("d-feedback").innerText = "Please enter a number for d.";
+        return;
+      }
+
+      if (Math.abs(userD - dCalculated) <= margin) {
+        document.getElementById("d-feedback").innerText = "Correct value for d!";
+      } else {
+        document.getElementById("d-feedback").innerText = "Incorrect. Try again or click 'Give up'.";
+      }
+    }
+
+    function revealD() {
+      document.getElementById("d-answer").value = dCalculated.toFixed(6);
+      document.getElementById("d-feedback").innerText = `The correct value for d is ${dCalculated.toFixed(6)} m.`;
     }
 
     function checkAnswer() {
@@ -83,9 +115,9 @@
         return;
       }
 
-      let errorMargin = variableToFind === 'theta' ? 0.5 : correctAnswer * 0.02;
+      const margin = variableToFind === 'theta' ? 0.5 : correctAnswer * 0.02;
 
-      if (Math.abs(userAnswer - correctAnswer) <= errorMargin) {
+      if (Math.abs(userAnswer - correctAnswer) <= margin) {
         document.getElementById("feedback").innerText = "Correct! Well done.";
       } else {
         document.getElementById("feedback").innerText = "Incorrect. Try again or click 'Give up'.";
@@ -93,9 +125,14 @@
     }
 
     function revealAnswer() {
-      const displayValue = variableToFind === 'theta'
-        ? `${correctAnswer.toFixed(1)}°`
-        : `${correctAnswer.toExponential(3)} m`;
+      let displayValue;
+      if (variableToFind === 'theta') {
+        displayValue = `${correctAnswer.toFixed(1)}°`;
+      } else if (variableToFind === 'lambda') {
+        displayValue = formatUnit(correctAnswer, 'nm');
+      } else {
+        displayValue = formatUnit(correctAnswer, 'mm');
+      }
       document.getElementById("feedback").innerText = `The correct answer is ${displayValue}.`;
       document.getElementById("user-answer").value = '';
     }
