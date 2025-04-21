@@ -100,12 +100,12 @@ function buildQuestionPool() {
 }
 
 // 7) Core practice‐flow functions
-let score = 0,
-    mixedCount = 0,
-    questionPool = [],
-    answeredCurrent = false,
-    currentQuestion = null,
-    currentAnswers = null;
+score = 0;
+mixedCount = 0;
+questionPool = [];
+answeredCurrent = false;
+currentQuestion = null;
+currentAnswers = null;
 
 function startPractice() {
   score = 0;
