@@ -53,7 +53,7 @@ function toggleByGroup(typeSuffix, isChecked) {
     .forEach(box => box.checked = isChecked);
 }
 
-// 5) Helpers to read what’s checked
+// 5) Helpers to read what checked
 function getSelectedDifficulty() {
   return Array.from(document.getElementsByName("difficulty"))
               .find(r => r.checked).value;
