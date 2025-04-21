@@ -1,1 +1,181 @@
+// js/topics/topic5.js
+const additionalQuestionsTopic5 = [
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "equation",
+    question: function() {
+      const m = (Math.random() * 10 + 5).toFixed(1);
+      const h = (Math.random() * 10 + 5).toFixed(1);
+      const g = 9.81;
+      const GPE = (m * g * h).toFixed(1);
+      return {
+        text: `Calculate the gravitational potential energy of a ${m} kg object raised to ${h} m.`,
+        answer: GPE + " J",
+        modelAnswer: `GPE = mgh ≈ ${GPE} J.`
+      };
+    }
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "equation",
+    question: function() {
+      const W = (Math.random() * 500 + 200).toFixed(0);
+      const t = (Math.random() * 10 + 5).toFixed(1);
+      const P = (W / t).toFixed(1);
+      return {
+        text: `If ${W} J of work is done in ${t} s, calculate the power output.`,
+        answer: P + " W",
+        modelAnswer: `Power = Work/Time ≈ ${P} W.`
+      };
+    }
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "equation",
+    question: function() {
+      const k = (Math.random() * 200 + 100).toFixed(0);
+      const x = (Math.random() * 0.1 + 0.05).toFixed(3);
+      const energy = (0.5 * k * x * x).toFixed(3);
+      return {
+        text: `A spring with constant ${k} N/m is compressed by ${x} m. Calculate the stored energy.`,
+        answer: energy + " J",
+        modelAnswer: `Energy = 0.5×k×x² ≈ ${energy} J.`
+      };
+    }
+  },
+  {
+    topic: 5,
+    difficulty: "hard",
+    type: "equation",
+    question: function() {
+      const F = (Math.random() * 50 + 50).toFixed(0);
+      const d = (Math.random() * 10 + 5).toFixed(1);
+      const reduction = (Math.random() * 0.3 + 0.2).toFixed(2);
+      const effectiveForce = (F * (1 - reduction)).toFixed(1);
+      const work = (effectiveForce * d).toFixed(1);
+      return {
+        text: `A force of ${F} N acts over ${d} m, but friction reduces the force by ${(reduction * 100).toFixed(0)}%. Calculate the net work done.`,
+        answer: work + " J",
+        modelAnswer: `Effective force ≈ ${effectiveForce} N, so work ≈ ${work} J.`
+      };
+    }
+  },
+  {
+    topic: 5,
+    difficulty: "hard",
+    type: "equation",
+    question: function() {
+      const m = (Math.random() * 5 + 1).toFixed(1);
+      const h = (Math.random() * 10 + 5).toFixed(1);
+      const g = 9.81;
+      const v = (Math.sqrt(2 * g * h)).toFixed(2);
+      return {
+        text: `An object of ${m} kg is dropped from ${h} m. Calculate its impact speed using energy conservation.`,
+        answer: v + " m/s",
+        modelAnswer: `v = √(2gh) ≈ ${v} m/s.`
+      };
+    }
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "equation",
+    question: function() {
+      const m = Math.floor(Math.random() * 10 + 1);
+      const v = Math.floor(Math.random() * 10 + 1);
+      const KE = (0.5 * m * v * v).toFixed(1);
+      return {
+        text: `Calculate the kinetic energy of a ${m} kg object moving at ${v} m/s.`,
+        answer: KE,
+        modelAnswer: `KE ≈ ${KE} J.`
+      };
+    }
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "definition",
+    question: "State what is meant by the work done by a force.",
+    modelAnswer: "Work is done when a force causes an object to move in its direction.",
+    keywords: [["force"], ["movement"]]
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "definition",
+    question: "Define power.",
+    modelAnswer: "Power is the rate of doing work or transferring energy.",
+    keywords: [["rate"], ["work"], ["energy"]]
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "definition",
+    question: "Use the definition of power to determine its SI units.",
+    modelAnswer: "Power in SI units is kg·m²/s³.",
+    keywords: [["kg"], ["m²"], ["s³"]]
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "definition",
+    question: "Use the definition of work to determine its SI units.",
+    modelAnswer: "Work in SI units is kg·m²/s².",
+    keywords: [["kg"], ["m²"], ["s²"]]
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "definition",
+    question: "Use the definition of force (F = m·a) to determine its SI units.",
+    modelAnswer: "Force in SI units is kg·m/s².",
+    keywords: [["kg"], ["m/s²"]]
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "definition",
+    question: "Use the definition of pressure (P = F/A) to determine its SI units.",
+    modelAnswer: "Pressure in SI units is kg/(m·s²).",
+    keywords: [["kg"], ["m"], ["s²"]]
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "definition",
+    question: "Use the definition of momentum (p = m·v) to determine its SI units.",
+    modelAnswer: "Momentum in SI units is kg·m/s.",
+    keywords: [["kg"], ["m/s"]]
+  },
+  {
+    topic: 5,
+    difficulty: "easy",
+    type: "definition",
+    question: "Use the definition of strain to determine its SI units.",
+    modelAnswer: "Strain is dimensionless.",
+    keywords: [["dimensionless"]]
+  },
+  {
+    topic: 5,
+    difficulty: "hard",
+    type: "numeric_multi",
+    question: function() {
+      const Vin = 9.0, R_fixed = 1800, V_fixed = 5.4;
+      const I = V_fixed / R_fixed;
+      const V_LDR = Vin - V_fixed;
+      const R_LDR = V_LDR / I;
+      return {
+        text: `A ${Vin} V battery is connected in series with an LDR and a ${R_fixed} Ω resistor. The voltmeter reads ${V_fixed} V. Calculate (a) the current and (b) the LDR resistance.`,
+        answer: [I.toFixed(3) + " A", R_LDR.toFixed(0) + " Ω"],
+        modelAnswer: [
+          `Current I ≈ ${I.toFixed(3)} A.`,
+          `LDR resistance ≈ ${R_LDR.toFixed(0)} Ω.`
+        ]
+      };
+    }
+  }
+];
 
