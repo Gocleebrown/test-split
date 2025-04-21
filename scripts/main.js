@@ -1,4 +1,4 @@
-// js/main.js
+// scripts/main.js
 
 // 1) Combine all topic arrays into one question bank
 const questionBank = []
@@ -31,19 +31,17 @@ const topicsArrNames = [
   "Particle and nuclear physics"
 ];
 
-// 3) Build the left/right topic columns
+// 3) Generate topic checkboxes
 function generateTopicCheckboxes() {
   const left  = document.getElementById("topic-columns-left");
   const right = document.getElementById("topic-columns-right");
 
   topicsArrNames.forEach((name, i) => {
     const topicNum = i + 1;
-    const block = `
-      <h3>${topicNum}. ${name}</h3>
-      <label><input type="checkbox" id="topic${topicNum}-defs"> Definitions</label>
-      <label><input type="checkbox" id="topic${topicNum}-eqs"> Equations</label>
-    `;
-    if (i % 2 === 0) left.innerHTML += block;
+    const block = `<h3>${topicNum}. ${name}</h3>
+<label><input type="checkbox" id="topic${topicNum}-defs"> Definitions</label>
+<label><input type="checkbox" id="topic${topicNum}-eqs"> Equations</label>`;
+    if (i % 2 === 0) left.innerHTML  += block;
     else             right.innerHTML += block;
   });
 }
@@ -51,7 +49,7 @@ function generateTopicCheckboxes() {
 // 4) “Select All” toggles
 function toggleByGroup(typeSuffix, isChecked) {
   document
-    .querySelectorAll(\`input[id$="-\${typeSuffix}"]\`)
+    .querySelectorAll(`input[id$="-${typeSuffix}"]`)
     .forEach(box => box.checked = isChecked);
 }
 
@@ -60,25 +58,27 @@ function getSelectedDifficulty() {
   return Array.from(document.getElementsByName("difficulty"))
               .find(r => r.checked).value;
 }
+
 function getCheckedTopicModes() {
   const wholeDefs = document.getElementById("whole-defs").checked;
-  const wholeEqs = document.getElementById("whole-eqs").checked;
-  const modes = topicsArrNames.map((_,i) => {
-    const n = i+1;
+  const wholeEqs  = document.getElementById("whole-eqs").checked;
+  const modes = topicsArrNames.map((_, i) => {
+    const n = i + 1;
     return {
       topic: n,
-      defs: document.getElementById(\`topic\${n}-defs\`).checked,
-      eqs:  document.getElementById(\`topic\${n}-eqs\`).checked
+      defs: document.getElementById(`topic${n}-defs`).checked,
+      eqs:  document.getElementById(`topic${n}-eqs`).checked
     };
   });
   return { wholeDefs, wholeEqs, modes };
 }
 
-// 6) Build your pool of questions
+// 6) Build question pool based on checks & difficulty
 function buildQuestionPool() {
   const { wholeDefs, wholeEqs, modes } = getCheckedTopicModes();
   const diff = getSelectedDifficulty();
   let filtered = [];
+
   questionBank.forEach(q => {
     const isDef = q.type === "definition";
     const isEq  = ["equation","numeric","numeric_multi","numeric_dynamic"].includes(q.type);
@@ -90,6 +90,7 @@ function buildQuestionPool() {
     }
     if (matched) filtered.push(q);
   });
+
   if (diff === "easy") {
     filtered = filtered.filter(q => q.difficulty === "easy" || !q.difficulty);
   } else if (diff === "hard") {
@@ -99,7 +100,12 @@ function buildQuestionPool() {
 }
 
 // 7) Core practice‐flow functions
-let score=0, mixedCount=0, questionPool=[], answeredCurrent=false, currentQuestion=null, currentAnswers=null;
+let score = 0,
+    mixedCount = 0,
+    questionPool = [],
+    answeredCurrent = false,
+    currentQuestion = null,
+    currentAnswers = null;
 
 function startPractice() {
   score = 0;
@@ -115,120 +121,132 @@ function startPractice() {
 }
 
 function askNewQuestion() {
-  if (!questionPool.length) return document.getElementById("question-box").innerText = "No matching questions available yet.";
+  if (!questionPool.length) {
+    document.getElementById("question-box").innerText = "No matching questions available yet.";
+    return;
+  }
   answeredCurrent = false;
   document.getElementById("feedback").innerText = "";
 
-  // mixed difficulty logic
   const diff = getSelectedDifficulty();
   let subset = questionPool;
+
   if (diff === "mixed") {
     subset = (mixedCount % 3 < 2)
-      ? questionPool.filter(q => q.difficulty==="easy"||!q.difficulty)
-      : questionPool.filter(q => q.difficulty==="hard");
+      ? questionPool.filter(q => q.difficulty === "easy" || !q.difficulty)
+      : questionPool.filter(q => q.difficulty === "hard");
     mixedCount++;
     if (!subset.length) subset = questionPool;
   }
 
-  loadQuestion(subset[Math.floor(Math.random()*subset.length)]);
+  const choice = subset[Math.floor(Math.random() * subset.length)];
+  loadQuestion(choice);
 }
 
-function loadQuestion(q){
+function loadQuestion(q) {
   currentQuestion = q;
-  // if dynamic
-  if (typeof q.question==="function") {
-    const b = q.question();
-    q.text = b.text;
-    q.answer = b.answer;
-    q.modelAnswer = b.modelAnswer;
-    q.image = b.image||null;
-  } else q.text = q.question;
+  if (typeof q.question === "function") {
+    const built = q.question();
+    q.text = built.text;
+    q.answer = built.answer;
+    q.modelAnswer = built.modelAnswer;
+    q.image = built.image || null;
+  } else {
+    q.text = q.question;
+  }
 
   document.getElementById("diagramContainer").innerHTML = "";
   document.getElementById("answerInputs").innerHTML = "";
   document.getElementById("feedback").innerText = "";
   document.getElementById("question-box").innerText = "Question: " + q.text;
-  if(q.image) document.getElementById("diagramContainer").innerHTML = q.image;
+  if (q.image) document.getElementById("diagramContainer").innerHTML = q.image;
 
-  // build inputs
-  if (q.type==="definition") {
+  // Build input fields
+  if (q.type === "definition") {
     const inp = document.createElement("input");
-    inp.type="text"; inp.id="answerInput"; inp.placeholder="Enter your answer...";
+    inp.type = "text"; inp.id = "answerInput"; inp.placeholder = "Enter your answer...";
     document.getElementById("answerInputs").appendChild(inp);
-    currentAnswers = q.keywords||[q.answer];
-  }
-  else if (["equation","numeric","numeric_dynamic"].includes(q.type)) {
+    currentAnswers = q.keywords || [q.answer];
+  } else if (["equation","numeric","numeric_dynamic"].includes(q.type)) {
     const inp = document.createElement("input");
-    inp.type="text"; inp.id="answerInput"; inp.placeholder="Enter your answer...";
+    inp.type = "text"; inp.id = "answerInput"; inp.placeholder = "Enter your answer...";
     document.getElementById("answerInputs").appendChild(inp);
     currentAnswers = [q.answer];
-  }
-  else if (q.type==="numeric_multi") {
-    q.answer.forEach((_,i)=>{
-      const inp=document.createElement("input");
-      inp.type="text";
-      inp.id=`answerInput${i+1}`;
-      inp.placeholder=`Part ${String.fromCharCode(97+i)}`;
-      inp.style.width="100px";
-      if(i>0) inp.style.marginLeft="10px";
+  } else if (q.type === "numeric_multi") {
+    q.answer.forEach((_, i) => {
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.id = `answerInput${i+1}`;
+      inp.placeholder = `Part ${String.fromCharCode(97+i)}`;
+      inp.style.width = "100px";
+      if (i > 0) inp.style.marginLeft = "10px";
       document.getElementById("answerInputs").appendChild(inp);
     });
-    currentAnswers=q.answer;
+    currentAnswers = q.answer;
   }
 }
 
-function checkAnswer(){
-  if(!currentQuestion||answeredCurrent) return;
-  let ua;
-  if(currentQuestion.type==="numeric_multi") {
-    ua=Array.from(document.querySelectorAll("#answerInputs input")).map(i=>i.value.trim());
-  } else ua = document.getElementById("answerInput").value.trim();
+function checkAnswer() {
+  if (!currentQuestion || answeredCurrent) return;
+  let userAns;
 
-  let correct=false;
-  if(currentQuestion.type==="definition"){
-    const low=ua.toLowerCase();
-    correct = currentAnswers.every(group=>group.some(k=>low.includes(k)));
+  if (currentQuestion.type === "numeric_multi") {
+    userAns = Array.from(document.querySelectorAll("#answerInputs input"))
+                   .map(i => i.value.trim());
+  } else {
+    userAns = document.getElementById("answerInput").value.trim();
   }
-  else if (["equation","numeric","numeric_dynamic"].includes(currentQuestion.type)){
-    const numU=parseFloat(ua), numC=parseFloat(currentAnswers[0]);
-    correct = !isNaN(numU) && Math.abs(numU-numC) < Math.max(0.01*Math.abs(numC),0.1);
-  }
-  else if(currentQuestion.type==="numeric_multi"){
-    correct = currentAnswers.every((ans,i)=>{
-      const nu=parseFloat(ua[i]), nc=parseFloat(ans);
-      return !isNaN(nu) && Math.abs(nu-nc)<=Math.max(0.01*Math.abs(nc),0.1);
+
+  let correct = false;
+
+  if (currentQuestion.type === "definition") {
+    const ansLower = userAns.toLowerCase();
+    correct = currentAnswers.every(group => group.some(k => ansLower.includes(k)));
+  } else if (["equation","numeric","numeric_dynamic"].includes(currentQuestion.type)) {
+    const numU = parseFloat(userAns), numC = parseFloat(currentAnswers[0]);
+    correct = !isNaN(numU) && Math.abs(numU - numC) < Math.max(0.01*Math.abs(numC), 0.1);
+  } else if (currentQuestion.type === "numeric_multi") {
+    correct = currentAnswers.every((ans, i) => {
+      const numU = parseFloat(userAns[i]), numC = parseFloat(ans);
+      return !isNaN(numU) && Math.abs(numU - numC) <= Math.max(0.01*Math.abs(numC), 0.1);
     });
   }
 
-  const fb=document.getElementById("feedback");
-  if(correct){ fb.innerText="✔ Correct!"; score++; document.getElementById("score").innerText=score;}
-  else fb.innerText="✘ Not quite correct.";
-  answeredCurrent=true;
+  const fb = document.getElementById("feedback");
+  if (correct) {
+    fb.innerText = "✔ Correct!";
+    score++;
+    document.getElementById("score").innerText = score;
+  } else {
+    fb.innerText = "✘ Not quite correct.";
+  }
+  answeredCurrent = true;
 }
 
-function showModelAnswer(){
-  if(!currentQuestion) return;
-  let t="Model Answer: ";
-  if(currentQuestion.type==="numeric_multi" && Array.isArray(currentQuestion.modelAnswer))
-    t+=currentQuestion.modelAnswer.join(" | ");
-  else t+=currentQuestion.modelAnswer;
-  document.getElementById("feedback").innerText=t;
-  answeredCurrent=true;
+function showModelAnswer() {
+  if (!currentQuestion) return;
+  let text = "Model Answer: ";
+  if (currentQuestion.type === "numeric_multi" && Array.isArray(currentQuestion.modelAnswer)) {
+    text += currentQuestion.modelAnswer.join(" | ");
+  } else {
+    text += currentQuestion.modelAnswer;
+  }
+  document.getElementById("feedback").innerText = text;
+  answeredCurrent = true;
 }
 
-// 8) Add the Check / Show / Next buttons just after the question-box
-window.addEventListener("DOMContentLoaded", ()=>{
-  const boxCont = document.getElementById("question-box").parentNode;
-  ["Check Answer","Show Model Answer","Next Question"].forEach((txt,idx)=>{
-    const b=document.createElement("button");
-    b.innerText=txt;
-    if(idx===0) b.onclick=checkAnswer;
-    if(idx===1) b.onclick=showModelAnswer;
-    if(idx===2) b.onclick=askNewQuestion;
-    b.style.marginRight="10px";
-    boxCont.insertBefore(b, boxCont.children[idx+1]);
+// 8) Wire up buttons and initialize on page load
+window.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("question-box").parentNode;
+  ["Check Answer", "Show Model Answer", "Next Question"].forEach((txt, idx) => {
+    const btn = document.createElement("button");
+    btn.innerText = txt;
+    btn.style.marginRight = "10px";
+    if (idx === 0) btn.onclick = checkAnswer;
+    if (idx === 1) btn.onclick = showModelAnswer;
+    if (idx === 2) btn.onclick = askNewQuestion;
+    container.insertBefore(btn, container.children[idx+1]);
   });
 
-  // Finally: generate the topic checkboxes into the two columns
   generateTopicCheckboxes();
 });
