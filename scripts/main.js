@@ -237,16 +237,23 @@ function showModelAnswer() {
 
 // 8) Wire up buttons and initialize on page load
 window.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("question-box").parentNode;
-  ["Check Answer", "Show Model Answer", "Next Question"].forEach((txt, idx) => {
+  const questionBox = document.getElementById("question-box");
+
+  // Create and insert the three action buttons right after the question box
+  const buttonSpecs = [
+    { text: "Check Answer",  onClick: checkAnswer },
+    { text: "Show Model Answer", onClick: showModelAnswer },
+    { text: "Next Question",  onClick: askNewQuestion }
+  ];
+
+  buttonSpecs.forEach(spec => {
     const btn = document.createElement("button");
-    btn.innerText = txt;
+    btn.innerText = spec.text;
     btn.style.marginRight = "10px";
-    if (idx === 0) btn.onclick = checkAnswer;
-    if (idx === 1) btn.onclick = showModelAnswer;
-    if (idx === 2) btn.onclick = askNewQuestion;
-    container.insertBefore(btn, container.children[idx+1]);
+    btn.addEventListener("click", spec.onClick);
+    questionBox.insertAdjacentElement("afterend", btn);
   });
 
+  // Finally, render the topic checkboxes
   generateTopicCheckboxes();
 });
