@@ -12,7 +12,7 @@ const additionalQuestionsTopic2 = [
       return { 
         text: `A body starts at ${u} m/s and accelerates at ${a} m/s² for ${t} s. Find its displacement.`,
         answer: s + " m",
-        modelAnswer: `Displacement = ut + 0.5at² ≈ ${s} m.`
+        modelAnswer: `Using SUVAT Equations find the one that you can use. In this case Displacement = ut + 0.5at² ≈ ${s} m.`
       };
     }
   },
@@ -101,10 +101,86 @@ const additionalQuestionsTopic2 = [
       return {
         text: `A projectile is launched at ${u} m/s at ${angle}°. Calculate its horizontal range.`,
         answer: range + " m",
-        modelAnswer: `Range = (u²*sin(2θ))/g ≈ ${range} m.`
+        modelAnswer: `You can either use the Range equation R = (v₀² * sin(2θ)) / g, or split the vector into its components, then work out the time in the air. Then use that time to work out the horizontal displacement.  ≈ ${range} m.`
       };
     }
   },
+  {
+  topic: 2,
+  difficulty: "easy",
+  type: "equation",
+  question: function() {
+    // Speed between 5 and 20 m/s
+    const V = (Math.random() * 15 + 5).toFixed(1);
+    // Angle between 10° and 70°
+    const θ = (Math.random() * 60 + 10).toFixed(1);
+    // Horizontal component Vh = V·cosθ
+    const Vh = (V * Math.cos(θ * Math.PI / 180)).toFixed(2);
+    return {
+      text: `A particle moves with speed ${V} m/s at an angle of ${θ}° above the horizontal. Calculate the horizontal component of its velocity.`,
+      answer: Vh + " m/s",
+      modelAnswer: `Horizontal component = V cos θ = ${V} × cos(${θ}°) ≈ ${Vh} m/s.`
+    };
+  }
+},
+  {
+  topic: 2,
+  difficulty: "easy",
+  type: "equation",
+  question: function() {
+    // Speed between 5 and 20 m/s
+    const V = (Math.random() * 15 + 5).toFixed(1);
+    // Angle between 10° and 70°
+    const θ = (Math.random() * 60 + 10).toFixed(1);
+    // Vertical component Vv = V·sinθ
+    const Vv = (V * Math.sin(θ * Math.PI / 180)).toFixed(2);
+    return {
+      text: `A particle moves with speed ${V} m/s at an angle of ${θ}° above the horizontal. Calculate the vertical component of its velocity.`,
+      answer: Vv + " m/s",
+      modelAnswer: `Vertical component = V sin θ = ${V} × sin(${θ}°) ≈ ${Vv} m/s.`
+    };
+  }
+},
+  // Add this object to your additionalQuestionsTopic2 array in topic2.js:
+
+{
+  topic: 2,
+  difficulty: "hard",
+  type: "numeric_multi",
+  question: function() {
+    // Two random displacements (3–12 m) and angles (10°–80°)
+    const d1 = (Math.random() * 9 + 3).toFixed(1);
+    const θ1 = (Math.random() * 70 + 10).toFixed(1);
+    const d2 = (Math.random() * 9 + 3).toFixed(1);
+    const θ2 = (Math.random() * 70 + 10).toFixed(1);
+    // Components of vector 1
+    const x1 = d1 * Math.cos(θ1 * Math.PI / 180);
+    const y1 = d1 * Math.sin(θ1 * Math.PI / 180);
+    // Components of vector 2
+    const x2 = d2 * Math.cos(θ2 * Math.PI / 180);
+    const y2 = d2 * Math.sin(θ2 * Math.PI / 180);
+    // Sum components
+    const x = x1 + x2;
+    const y = y1 + y2;
+    // Resultant magnitude and direction
+    const R = Math.sqrt(x*x + y*y).toFixed(2);
+    const φ = (Math.atan2(y, x) * 180 / Math.PI).toFixed(1);
+    return {
+      text: `A particle first moves ${d1} m at ${θ1}° above the horizontal, then ${d2} m at ${θ2}° above the horizontal. Calculate the magnitude and direction (above the horizontal) of the resultant displacement.`,
+      answer: [R + " m", φ + "°"],
+      modelAnswer: [
+        `First, split each vector into horizontal (x) and vertical (y) components:`,
+        `• Vector 1: x₁ = ${d1} cos(${θ1}°), y₁ = ${d1} sin(${θ1}°).`,
+        `• Vector 2: x₂ = ${d2} cos(${θ2}°), y₂ = ${d2} sin(${θ2}°).`,
+        `Next, add components: x = x₁ + x₂, y = y₁ + y₂.`,
+        `Finally, recombine to get the resultant:`,
+        `• Magnitude R = √(x² + y²) ≈ ${R} m.`,
+        `• Direction φ = atan2(y, x) ≈ ${φ}° above horizontal.`
+      ]
+    };
+  }
+},
+
   {
     topic: 2,
     difficulty: "easy",
