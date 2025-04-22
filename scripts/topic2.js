@@ -1,4 +1,4 @@
-// Topic 2: Kinematics
+// Topic 2: Kinematics (with more explanatory model answers)
 const additionalQuestionsTopic2 = [
   {
     topic: 2,
@@ -12,7 +12,12 @@ const additionalQuestionsTopic2 = [
       return {
         text: `A body starts at ${u} m/s and accelerates at ${a} m/s² for ${t} s. Find its displacement.`,
         answer: s + " m",
-        modelAnswer: `Using SUVAT, displacement = ut + 0.5at² ≈ ${s} m.`
+        modelAnswer: 
+          `1) Identify values: initial speed u = ${u} m/s, acceleration a = ${a} m/s², time t = ${t} s.\n` +
+          `2) Use the displacement formula: s = u×t + ½×a×t².\n` +
+          `3) Calculate u×t = ${u}×${t} = ${ (u*t).toFixed(1) }.\n` +
+          `4) Calculate ½×a×t² = 0.5×${a}×${t}² = ${ (0.5*a*t*t).toFixed(1) }.\n` +
+          `5) Add them: s ≈ ${(u*t + 0.5*a*t*t).toFixed(1)} m.`
       };
     }
   },
@@ -27,11 +32,12 @@ const additionalQuestionsTopic2 = [
       const t_max = (u / g).toFixed(2);
       const h_max = (0.5 * u * u / g).toFixed(2);
       return {
-        text: `A ball is thrown vertically upwards with speed ${u} m/s. Calculate (a) time to reach max height and (b) max height.`,
+        text: `A ball is thrown vertically upwards at ${u} m/s. Calculate: (a) time to reach maximum height and (b) the maximum height.`,
         answer: [t_max + " s", h_max + " m"],
         modelAnswer: [
-          `Time to max height = u/g = ${u}/9.81 ≈ ${t_max} s.`,
-          `Max height = 0.5 u²/g ≈ ${h_max} m.`
+          `a) At top the speed is 0. The speed drops by g each second, so time = initial speed / g = ${u} / 9.81 ≈ ${t_max} s.`,
+          `b) You can think average speed over the trip up is (u + 0)/2, so height = avg speed × time = (${u}+0)/2 × ${t_max} ≈ ${h_max} m.\n` +
+          `   Or use h = u²/(2g) = ${u}²/(2×9.81) ≈ ${h_max} m.`
         ]
       };
     }
@@ -48,7 +54,10 @@ const additionalQuestionsTopic2 = [
       return {
         text: `An object is dropped from ${h} m. Calculate the time to hit the ground.`,
         answer: t + " s",
-        modelAnswer: `t = √(2h/g) = √(2×${h}/9.81) ≈ ${t} s.`
+        modelAnswer: 
+          `1) No initial speed, so h = ½ g t².\n` +
+          `2) Solve for t: t = √(2h/g) = √(2×${h}/9.81) ≈ ${t} s.\n` +
+          `3) That is how long it takes to fall ${h} m under gravity.`
       };
     }
   },
@@ -64,11 +73,11 @@ const additionalQuestionsTopic2 = [
       const t = (Math.sqrt(2 * h / g)).toFixed(2);
       const d = (u * t).toFixed(2);
       return {
-        text: `An object is launched horizontally from a ${h} m cliff at ${u} m/s. Find (a) time to hit ground and (b) horizontal distance.`,
+        text: `An object is launched horizontally from a ${h} m cliff at ${u} m/s. Find (a) time to hit the ground and (b) horizontal distance traveled.`,
         answer: [t + " s", d + " m"],
         modelAnswer: [
-          `Time = √(2h/g) ≈ ${t} s.`,
-          `Distance = u×t ≈ ${d} m.`
+          `a) Vertical fall is just like dropping: t = √(2h/g) = √(2×${h}/9.81) ≈ ${t} s.`,
+          `b) While falling, horizontal speed stays constant at ${u} m/s. Distance = speed × time = ${u} × ${t} ≈ ${d} m.`
         ]
       };
     }
@@ -84,11 +93,11 @@ const additionalQuestionsTopic2 = [
       const a = (u / t).toFixed(2);
       const s = (0.5 * u * t).toFixed(2);
       return {
-        text: `A vehicle decelerates from ${u} m/s to rest in ${t} s. Calculate (a) deceleration and (b) distance traveled.`,
+        text: `A vehicle slows from ${u} m/s to rest in ${t} s. Calculate (a) deceleration and (b) distance traveled.`,
         answer: [a + " m/s²", s + " m"],
         modelAnswer: [
-          `Deceleration = u/t ≈ ${a} m/s².`,
-          `Distance = 0.5×u×t ≈ ${s} m.`
+          `a) Deceleration = (final speed – initial speed) / time = (0 – ${u}) / ${t} ≈ –${a} m/s² (magnitude ${a}).`,
+          `b) Average speed = (${u} + 0)/2; distance = avg speed × time = (${u}/2) × ${t} ≈ ${s} m.`
         ]
       };
     }
@@ -106,7 +115,12 @@ const additionalQuestionsTopic2 = [
       return {
         text: `A projectile is launched at ${u} m/s at ${θ}°. Calculate its horizontal range.`,
         answer: range + " m",
-        modelAnswer: `Range = (v₀² sin2θ)/g ≈ ${range} m.`
+        modelAnswer: 
+          `Method 1 (formula): Range = (u² × sin2θ) / g.\n` +
+          `  = (${u}² × sin(2×${θ}°)) / 9.81 ≈ ${range} m.\n` +
+          `Method 2 (components):\n` +
+          `  • Vertical component = u sinθ, find time up & down.\n` +
+          `  • Horizontal component = u cosθ, multiply by total time.`
       };
     }
   },
@@ -120,9 +134,11 @@ const additionalQuestionsTopic2 = [
       const θ = (Math.random() * 60 + 10).toFixed(1);
       const Vh = (V * Math.cos(θ * Math.PI / 180)).toFixed(2);
       return {
-        text: `Speed ${V} m/s at ${θ}° above horizontal. Find the horizontal component.`,
+        text: `Speed ${V} m/s at ${θ}° above horizontal. Calculate the horizontal component.`,
         answer: Vh + " m/s",
-        modelAnswer: `V_x = V·cosθ = ${V}·cos(${θ}°) ≈ ${Vh} m/s.`
+        modelAnswer: 
+          `Draw a right‐angle triangle: the hypotenuse is speed ${V}, angle to horizontal is ${θ}°.\n` +
+          `Horizontal side = V × cosθ = ${V} × cos(${θ}°) ≈ ${Vh} m/s.`
       };
     }
   },
@@ -136,44 +152,11 @@ const additionalQuestionsTopic2 = [
       const θ = (Math.random() * 60 + 10).toFixed(1);
       const Vv = (V * Math.sin(θ * Math.PI / 180)).toFixed(2);
       return {
-        text: `Speed ${V} m/s at ${θ}° above horizontal. Find the vertical component.`,
+        text: `Speed ${V} m/s at ${θ}° above horizontal. Calculate the vertical component.`,
         answer: Vv + " m/s",
-        modelAnswer: `V_y = V·sinθ = ${V}·sin(${θ}°) ≈ ${Vv} m/s.`
-      };
-    }
-  },
-
-  {
-    topic: 2,
-    difficulty: "hard",
-    type: "numeric_multi",
-    question: function() {
-      const d1 = (Math.random() * 9 + 3).toFixed(1);
-      const θ1 = (Math.random() * 70 + 10).toFixed(1);
-      const d2 = (Math.random() * 9 + 3).toFixed(1);
-      const θ2 = (Math.random() * 70 + 10).toFixed(1);
-
-      const x1 = d1 * Math.cos(θ1 * Math.PI / 180);
-      const y1 = d1 * Math.sin(θ1 * Math.PI / 180);
-      const x2 = d2 * Math.cos(θ2 * Math.PI / 180);
-      const y2 = d2 * Math.sin(θ2 * Math.PI / 180);
-
-      const x = x1 + x2;
-      const y = y1 + y2;
-
-      const R = Math.sqrt(x*x + y*y).toFixed(2);
-      const φ = (Math.atan2(y, x) * 180 / Math.PI).toFixed(1);
-
-      return {
-        text: `Moves ${d1} m at ${θ1}°, then ${d2} m at ${θ2}°. Find resultant magnitude and direction.`,
-        answer: [R + " m", φ + "°"],
-        modelAnswer: [
-          `1) Split into components:`,
-          `   x₁=${d1}cos(${θ1}°), y₁=${d1}sin(${θ1}°);`,
-          `   x₂=${d2}cos(${θ2}°), y₂=${d2}sin(${θ2}°).`,
-          `2) Sum: x=${x.toFixed(2)}, y=${y.toFixed(2)}.`,
-          `3) Resultant: R=√(x²+y²)≈${R} m, φ=atan2(y,x)≈${φ}° above horizontal.`
-        ]
+        modelAnswer: 
+          `Using the same triangle: vertical side = V × sinθ = ${V} × sin(${θ}°) ≈ ${Vv} m/s.\n` +
+          `This tells you how fast the object moves up.`
       };
     }
   },
