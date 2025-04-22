@@ -47,7 +47,7 @@ The car moves at constant speed. Assume no friction.
 2. Rearrange: v = P / F = ${power} W ÷ ${tension} N ≈ ${speed} m/s.  
 3. That means the car travels up the slope at about ${speed} m/s.`
       ]
-    }
+    },
 {
     topic: 5,
     difficulty: "easy",
