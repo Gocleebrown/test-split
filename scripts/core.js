@@ -21,6 +21,65 @@ function ordinalSuffix(n) {
 function getRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
+/**
+ * Draw a simple “car on slope pulled by winch” sketch.
+ * @param {string} canvasId – the id of the <canvas> element
+ * @param {number} angleDeg – slope angle in degrees
+ */
+function drawWinchDiagram(canvasId, angleDeg) {
+  const c = document.getElementById(canvasId);
+  if (!c) return;
+  const ctx = c.getContext("2d");
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const margin = 20;
+
+  // 1) move origin to bottom‑left
+  ctx.save();
+  ctx.translate(margin, H - margin);
+  // 2) rotate the axes so “x” runs along the slope
+  ctx.rotate(-angleDeg * Math.PI / 180);
+
+  // 3) draw the slope line
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(W - 2 * margin, 0);
+  ctx.lineWidth   = 4;
+  ctx.strokeStyle = "#555";
+  ctx.stroke();
+
+  // 4) draw the car (a simple rectangle)
+  const carW = 40, carH = 20;
+  const carX = (W - 2*margin) * 0.3;
+  const carY = -carH;
+  ctx.fillStyle = "#888";
+  ctx.fillRect(carX, carY, carW, carH);
+
+  // 5) draw the cable from the car up the slope
+  ctx.beginPath();
+  ctx.moveTo(carX + carW, carY + carH*0.5);
+  ctx.lineTo(W - 2*margin - 10, -10);
+  ctx.lineWidth   = 2;
+  ctx.strokeStyle = "#333";
+  ctx.stroke();
+
+  // restore un‑rotated coordinate system
+  ctx.restore();
+
+  // 6) draw the winch drum as a circle in the top‑right
+  const drumX = W - margin;
+  const drumY = margin;
+  ctx.beginPath();
+  ctx.arc(drumX, drumY, 10, 0, 2*Math.PI);
+  ctx.fillStyle = "#333";
+  ctx.fill();
+  // 6a) inner hub
+  ctx.beginPath();
+  ctx.arc(drumX, drumY, 3, 0, 2*Math.PI);
+  ctx.fillStyle = "#fff";
+  ctx.fill();
+}
 
 // Draw spring F vs x chart (using Chart.js)
 function drawSpringChart(canvasId, k, L0) {
