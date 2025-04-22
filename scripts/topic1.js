@@ -23,20 +23,6 @@ const additionalQuestionsTopic1 = [
     difficulty: "easy",
     type: "equation",
     question: function() {
-      const F = (Math.random() * 900 + 100).toFixed(0);
-      const dynes = (F * 1e5).toFixed(0);
-      return {
-        text: `Convert a force of ${F} N into dynes. Explain the conversion factor used.`,
-        answer: dynes + " dynes",
-        modelAnswer: `1 N = 10^5 dynes, so ${F} N equals ${dynes} dynes.`
-      };
-    }
-  },
-  {
-    topic: 1,
-    difficulty: "easy",
-    type: "equation",
-    question: function() {
       const densitySI = (Math.random() * 1000 + 500).toFixed(0);
       const densityCGS = (densitySI / 1000).toFixed(3);
       return {
@@ -55,9 +41,9 @@ const additionalQuestionsTopic1 = [
       const dV = (V * (Math.random() * 0.1 + 0.01)).toFixed(1);
       const percent = ((dV / V) * 100).toFixed(1);
       return {
-        text: `A measurement yields a value of ${V} with an absolute uncertainty of ${dV}. Calculate the percentage uncertainty. Explain the calculation.`,
+        text: `A measurement gives a value of ${V} with an absolute uncertainty of ${dV}. Calculate the percentage uncertainty. Explain the calculation.`,
         answer: percent + " %",
-        modelAnswer: `Percentage uncertainty = (ΔV / V) × 100 = (${dV} / ${V}) × 100 ≈ ${percent} %.`
+        modelAnswer: `Percentage uncertainty is the percentage uncertainty as percentage  = (ΔV / V) × 100 = (${dV} / ${V}) × 100 ≈ ${percent} %.`
       };
     }
   },
@@ -66,7 +52,7 @@ const additionalQuestionsTopic1 = [
     difficulty: "easy",
     type: "equation",
     question: function() {
-      const C = (Math.random() * 60 - 20).toFixed(1);
+      const C = (Math.random() * 100 - 00).toFixed(1);
       const K = (parseFloat(C) + 273.15).toFixed(2);
       return {
         text: `Convert a temperature of ${C} °C to Kelvin. Explain the conversion formula.`,
@@ -114,7 +100,7 @@ const additionalQuestionsTopic1 = [
       return {
         text: `A car travels ${km} km in ${hr} hour. What is its speed in m/s?`,
         answer: mps,
-        modelAnswer: `Speed = ( ${km}×1000 m ) / ( ${hr}×3600 s ) ≈ ${mps} m/s.`
+        modelAnswer: `First convert the distance into m by timings by 1000. Then convert the time into seconds by timeings by 3600 (or 60 to get mins then 60 again to get seconds) Speed = ( ${km}×1000 m ) / ( ${hr}×3600 s ) ≈ ${mps} m/s.`
       };
     }
   },
@@ -163,7 +149,7 @@ const additionalQuestionsTopic1 = [
     type: "definition",
     question: "Define random error.",
     modelAnswer: "Random error is the unpredictable variation in measurements due to uncontrolled factors.",
-    keywords: [["unpredictable"], ["variation", "fluctuation"]]
+    keywords: [["unpredictable"], ["variation", "fluctuation", "changes"]]
   },
   {
     topic: 1,
@@ -171,7 +157,7 @@ const additionalQuestionsTopic1 = [
     type: "definition",
     question: "Define systematic error.",
     modelAnswer: "Systematic error is a consistent bias in measurements that skews results in one direction.",
-    keywords: [["consistent"], ["bias"]]
+    keywords: [["consistent"], ["bias", "incorrect reading"]]
   },
   {
     topic: 1,
@@ -187,7 +173,7 @@ const additionalQuestionsTopic1 = [
     type: "definition",
     question: "Define accuracy.",
     modelAnswer: "Accuracy indicates how close a measured value is to the true or accepted value.",
-    keywords: [["true value"], ["correct"]]
+    keywords: [["true", "accepted", "real" ]
   },
   {
     topic: 1,
@@ -195,7 +181,7 @@ const additionalQuestionsTopic1 = [
     type: "definition",
     question: "Define absolute uncertainty.",
     modelAnswer: "Absolute uncertainty is the estimated amount by which a measured value may vary.",
-    keywords: [["uncertainty"], ["margin"]]
+    keywords: ["may vary", "difference in possible results", "accepted error"]
   },
   {
     topic: 1,
@@ -203,11 +189,11 @@ const additionalQuestionsTopic1 = [
     type: "definition",
     question: "Explain how to combine uncertainties for multiplication and division.",
     modelAnswer: "For multiplication or division, add the percentage uncertainties of the individual values.",
-    keywords: [["percentage uncertainty"], ["combine"]]
+    keywords: [["percentage uncertainty"], ["combine", "add"]]
   },
   {
     topic: 1,
-    difficulty: "hard",
+    difficulty: "easy",
     type: "equation",
     question: function() {
       const length =  (Math.random() * (3.5 - 0.5) + .5).toFixed(1);
