@@ -173,7 +173,7 @@ const additionalQuestionsTopic1 = [
     type: "definition",
     question: "Define accuracy.",
     modelAnswer: "Accuracy indicates how close a measured value is to the true or accepted value.",
-    keywords: [["true", "accepted", "real" ]
+    keywords: ["true", "accepted", "real" ]
   },
   {
     topic: 1,
