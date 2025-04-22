@@ -1,6 +1,54 @@
 // js/topics/topic5.js
 const additionalQuestionsTopic5 = [
   {
+  topic: 5,
+  difficulty: "easy",
+  type: "numeric_multi",
+  question: function() {
+    // — Dynamic inputs —
+    const angle  = Math.floor(Math.random() * 20 + 5);    // 5°–24°
+    const weight = Math.floor(Math.random() * 500 + 300); // 300–799 N
+    const power  = Math.floor(Math.random() * 80  + 20);  // 20–99 W
+
+    // — Calculations —
+    const tension = (weight * Math.sin(angle * Math.PI/180)).toFixed(1);
+    const speed   = (power / tension).toFixed(2);
+
+    // unique canvas id so multiples don’t clash
+    const canvasId = `winch_${angle}_${weight}_${power}`;
+
+    return {
+      text: `A car is pulled up a slope by a winch, as shown in the figure.  
+- Winch power output: ${power} W  
+- Car weight: ${weight} N  
+- Slope angle: ${angle}°  
+
+The car moves at constant speed. Assume no friction.  
+
+(i) Calculate the tension in the cable.  
+(ii) Calculate the speed of the car up the slope.`,
+      
+      // canvas placeholder for the diagram:
+      image: `<canvas id="${canvasId}" width="400" height="200"></canvas>`,
+
+      // once rendered, draw the slope + car + winch:
+      setup: () => setTimeout(() => drawWinchDiagram(canvasId, angle), 50),
+
+      answer: [ `${tension} N`, `${speed} m/s` ],
+
+      modelAnswer: [
+        // part (i)
+        `1. Weight acts straight down (${weight} N).  
+2. On a slope, the component pulling down the slope is W × sin θ = ${weight}×sin(${angle}°) ≈ ${tension} N.  
+3. So the winch must pull with that tension to keep the car moving steadily.`,
+
+        // part (ii)
+        `1. Power (P) = force (F) × speed (v).  
+2. Rearrange: v = P / F = ${power} W ÷ ${tension} N ≈ ${speed} m/s.  
+3. That means the car travels up the slope at about ${speed} m/s.`
+      ]
+    }
+{
     topic: 5,
     difficulty: "easy",
     type: "equation",
