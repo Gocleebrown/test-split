@@ -2,7 +2,7 @@
 const additionalQuestionsTopic5 = [
   {
   topic: 5,
-  difficulty: "easy",
+  difficulty: "hard",
   type: "numeric_multi",
   question: function() {
     // — Dynamic inputs —
@@ -208,24 +208,5 @@ The car moves at constant speed. Assume no friction.
     modelAnswer: "Strain is dimensionless.",
     keywords: [["dimensionless"]]
   },
-  {
-    topic: 5,
-    difficulty: "hard",
-    type: "numeric_multi",
-    question: function() {
-      const Vin = 9.0, R_fixed = 1800, V_fixed = 5.4;
-      const I = V_fixed / R_fixed;
-      const V_LDR = Vin - V_fixed;
-      const R_LDR = V_LDR / I;
-      return {
-        text: `A ${Vin} V battery is connected in series with an LDR and a ${R_fixed} Ω resistor. The voltmeter reads ${V_fixed} V. Calculate (a) the current and (b) the LDR resistance.`,
-        answer: [I.toFixed(3) + " A", R_LDR.toFixed(0) + " Ω"],
-        modelAnswer: [
-          `Current I ≈ ${I.toFixed(3)} A.`,
-          `LDR resistance ≈ ${R_LDR.toFixed(0)} Ω.`
-        ]
-      };
-    }
-  }
 ];
 
