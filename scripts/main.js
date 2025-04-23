@@ -159,7 +159,12 @@ function loadQuestion(q) {
   document.getElementById("answerInputs").innerHTML = "";
   document.getElementById("feedback").innerText = "";
   document.getElementById("question-box").innerText = "Question: " + q.text;
-  if (q.image) document.getElementById("diagramContainer").innerHTML = q.image;
+  if (q.image) {
+    document.getElementById("diagramContainer").innerHTML = q.image;
+   if (typeof q.setup === "function") {
+      q.setup();
+   }
+  }
 
   // Build input fields
   if (q.type === "definition") {
