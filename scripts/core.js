@@ -22,63 +22,104 @@ function getRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 /**
- * Draw a simple “car on slope pulled by winch” sketch.
- * @param {string} canvasId – the id of the <canvas> element
+/**
+ * Draw a car-on-slope + winch diagram with baseline, dynamic angle arc, and motor label.
+ * @param {string} canvasId – id of the <canvas> element
  * @param {number} angleDeg – slope angle in degrees
  */
 function drawWinchDiagram(canvasId, angleDeg) {
   const c = document.getElementById(canvasId);
   if (!c) return;
-  const ctx = c.getContext("2d");
+  const ctx = c.getContext('2d');
   const W = c.width, H = c.height;
   ctx.clearRect(0, 0, W, H);
 
-  const margin = 20;
+  const margin   = 20;
+  const slopeLen = W - 2 * margin;
+  const baseY    = H - margin;
 
-  // 1) move origin to bottom‑left
+  // 1) Draw horizontal baseline
+  ctx.beginPath();
+  ctx.moveTo(margin, baseY);
+  ctx.lineTo(W - margin, baseY);
+  ctx.lineWidth   = 2;
+  ctx.strokeStyle = '#000';
+  ctx.stroke();
+
+  // 2) Draw dynamic angle arc at the base
+  const originX = margin;
+  const originY = baseY;
+  const arcR    = 30;
+  const angleRad = angleDeg * Math.PI / 180;
+  ctx.beginPath();
+  // from horizontal (0) down to slope (-angleRad), anticlockwise=true
+  ctx.arc(originX, originY, arcR, 0, -angleRad, true);
+  ctx.lineWidth   = 2;
+  ctx.strokeStyle = '#000';
+  ctx.stroke();
+  // Label the angle in the middle of the arc
+  const midAng = -angleRad / 2;
+  const labelX = originX + (arcR + 12) * Math.cos(midAng);
+  const labelY = originY + (arcR + 12) * Math.sin(midAng);
+  ctx.font      = '14px Arial';
+  ctx.fillStyle = '#000';
+  ctx.fillText(`${angleDeg}°`, labelX - 7, labelY + 5);
+
+  // 3) Draw slope, car, and cable in rotated coords
   ctx.save();
-  ctx.translate(margin, H - margin);
-  // 2) rotate the axes so “x” runs along the slope
-  ctx.rotate(-angleDeg * Math.PI / 180);
+  ctx.translate(margin, baseY);
+  ctx.rotate(-angleRad);
 
-  // 3) draw the slope line
+  // 3a) slope line
   ctx.beginPath();
   ctx.moveTo(0, 0);
-  ctx.lineTo(W - 2 * margin, 0);
+  ctx.lineTo(slopeLen, 0);
   ctx.lineWidth   = 4;
-  ctx.strokeStyle = "#555";
+  ctx.strokeStyle = '#555';
   ctx.stroke();
 
-  // 4) draw the car (a simple rectangle)
+  // 3b) car rectangle
   const carW = 40, carH = 20;
-  const carX = (W - 2*margin) * 0.3;
+  const carX = slopeLen * 0.3;
   const carY = -carH;
-  ctx.fillStyle = "#888";
+  ctx.fillStyle = '#888';
   ctx.fillRect(carX, carY, carW, carH);
 
-  // 5) draw the cable from the car up the slope
+  // 3c) cable from car up the slope
   ctx.beginPath();
-  ctx.moveTo(carX + carW, carY + carH*0.5);
-  ctx.lineTo(W - 2*margin - 10, -10);
+  ctx.moveTo(carX + carW, carY + carH / 2);
+  ctx.lineTo(slopeLen - 10, -10);
   ctx.lineWidth   = 2;
-  ctx.strokeStyle = "#333";
+  ctx.strokeStyle = '#333';
   ctx.stroke();
 
-  // restore un‑rotated coordinate system
   ctx.restore();
 
-  // 6) draw the winch drum as a circle in the top‑right
-  const drumX = W - margin;
-  const drumY = margin;
+  // 4) Compute end-of-slope for the winch drum
+  const endX = margin + slopeLen * Math.cos(angleRad);
+  const endY = baseY  - slopeLen * Math.sin(angleRad);
+
+  // 4a) winch drum (outer & inner circles)
   ctx.beginPath();
-  ctx.arc(drumX, drumY, 10, 0, 2*Math.PI);
-  ctx.fillStyle = "#333";
+  ctx.arc(endX, endY, 10, 0, 2 * Math.PI);
+  ctx.fillStyle = '#333';
   ctx.fill();
-  // 6a) inner hub
   ctx.beginPath();
-  ctx.arc(drumX, drumY, 3, 0, 2*Math.PI);
-  ctx.fillStyle = "#fff";
+  ctx.arc(endX, endY, 3, 0, 2 * Math.PI);
+  ctx.fillStyle = '#fff';
   ctx.fill();
+
+  // 5) Leader line + “motor” label
+  const labelX2 = endX + 20;
+  const labelY2 = endY - 30;
+  ctx.beginPath();
+  ctx.moveTo(endX, endY);
+  ctx.lineTo(labelX2, labelY2);
+  ctx.lineWidth   = 2;
+  ctx.strokeStyle = '#000';
+  ctx.stroke();
+  ctx.fillStyle = '#000';
+  ctx.fillText('motor', labelX2 + 5, labelY2 - 5);
 }
 
 // Draw spring F vs x chart (using Chart.js)
