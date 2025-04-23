@@ -28,7 +28,7 @@ The car moves at constant speed. Assume no friction.
 (ii) Calculate the speed of the car up the slope.`,
       
       // canvas placeholder for the diagram:
-      image: `<canvas id="${canvasId}" width="600" height="300"></canvas>`,
+      image: `<canvas id="${canvasId}" width="700" height="400"></canvas>`,
 
       // once rendered, draw the slope + car + winch:
       setup: () => setTimeout(() => drawWinchDiagram(canvasId, angle), 50),
