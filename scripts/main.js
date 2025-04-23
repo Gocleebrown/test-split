@@ -151,6 +151,7 @@ function loadQuestion(q) {
     q.answer = built.answer;
     q.modelAnswer = built.modelAnswer;
     q.image = built.image || null;
+    q.setup       = built.setup   || null;
   } else {
     q.text = q.question;
   }
