@@ -200,13 +200,5 @@ The car moves at constant speed. Assume no friction.
     modelAnswer: "Momentum in SI units is kg·m/s.",
     keywords: [["kg"], ["m/s"]]
   },
-  {
-    topic: 5,
-    difficulty: "easy",
-    type: "definition",
-    question: "Use the definition of strain to determine its SI units.",
-    modelAnswer: "Strain is dimensionless.",
-    keywords: [["dimensionless"]]
-  },
 ];
 
