@@ -6,10 +6,9 @@ const additionalQuestionsTopic5 = [
   type: "numeric_multi",
   question: function() {
     // — Dynamic inputs —
-    const angle  = Math.floor(Math.random() * 20 + 5);    // 5°–24°
-    const weight = Math.floor(Math.random() * 500 + 300); // 300–799 N
-    const power  = Math.floor(Math.random() * 80  + 20);  // 20–99 W
-
+const angle  = Math.floor(Math.random() * (80 - 25 + 1)) + 25;
+const weight = Math.floor(Math.random() * (800 - 300 + 1)) + 300;
+const power  = Math.floor(Math.random() * (500 - 80 + 1)) + 80;
     // — Calculations —
     const tension = (weight * Math.sin(angle * Math.PI/180)).toFixed(1);
     const speed   = (power / tension).toFixed(2);
