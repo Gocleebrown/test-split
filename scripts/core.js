@@ -23,7 +23,8 @@ function getRandom(arr) {
 }
 /**
 /**
- * Draw a car-on-slope + winch diagram with baseline, dynamic angle arc, and motor label.
+ /**
+ * Draw a car-on-slope + winch diagram with baseline, dynamic angle arc, and winch label.
  * @param {string} canvasId – id of the <canvas> element
  * @param {number} angleDeg – slope angle in degrees
  */
@@ -38,7 +39,7 @@ function drawWinchDiagram(canvasId, angleDeg) {
   const slopeLen = W - 2 * margin;
   const baseY    = H - margin;
 
-  // 1) Draw horizontal baseline
+  // 1) Horizontal baseline
   ctx.beginPath();
   ctx.moveTo(margin, baseY);
   ctx.lineTo(W - margin, baseY);
@@ -46,21 +47,24 @@ function drawWinchDiagram(canvasId, angleDeg) {
   ctx.strokeStyle = '#000';
   ctx.stroke();
 
-  // 2) Draw dynamic angle arc at the base
+  // 2) Dynamic angle arc at the base
   const originX = margin;
   const originY = baseY;
   const arcR    = 30;
   const angleRad = angleDeg * Math.PI / 180;
+
   ctx.beginPath();
-  // from horizontal (0) down to slope (-angleRad), anticlockwise=true
   ctx.arc(originX, originY, arcR, 0, -angleRad, true);
   ctx.lineWidth   = 2;
   ctx.strokeStyle = '#000';
   ctx.stroke();
-  // Label the angle in the middle of the arc
+
+  // Label the angle a bit further out for clarity
   const midAng = -angleRad / 2;
-  const labelX = originX + (arcR + 12) * Math.cos(midAng);
-  const labelY = originY + (arcR + 12) * Math.sin(midAng);
+  // push label radius out by +20 instead of +12
+  const labelRadius = arcR + 20;
+  const labelX = originX + labelRadius * Math.cos(midAng);
+  const labelY = originY + labelRadius * Math.sin(midAng);
   ctx.font      = '14px Arial';
   ctx.fillStyle = '#000';
   ctx.fillText(`${angleDeg}°`, labelX - 7, labelY + 5);
@@ -99,7 +103,7 @@ function drawWinchDiagram(canvasId, angleDeg) {
   const endX = margin + slopeLen * Math.cos(angleRad);
   const endY = baseY  - slopeLen * Math.sin(angleRad);
 
-  // 4a) winch drum (outer & inner circles)
+  // 4a) winch drum (outer & inner)
   ctx.beginPath();
   ctx.arc(endX, endY, 10, 0, 2 * Math.PI);
   ctx.fillStyle = '#333';
@@ -109,8 +113,8 @@ function drawWinchDiagram(canvasId, angleDeg) {
   ctx.fillStyle = '#fff';
   ctx.fill();
 
-  // 5) Leader line + “motor” label
-  const labelX2 = endX + 20;
+  // 5) Leader line + “winch” label
+  const labelX2 = endX + 25;
   const labelY2 = endY - 30;
   ctx.beginPath();
   ctx.moveTo(endX, endY);
@@ -118,9 +122,11 @@ function drawWinchDiagram(canvasId, angleDeg) {
   ctx.lineWidth   = 2;
   ctx.strokeStyle = '#000';
   ctx.stroke();
+
   ctx.fillStyle = '#000';
-  ctx.fillText('motor', labelX2 + 5, labelY2 - 5);
+  ctx.fillText('winch', labelX2 + 5, labelY2 - 5);
 }
+
 
 // Draw spring F vs x chart (using Chart.js)
 function drawSpringChart(canvasId, k, L0) {
