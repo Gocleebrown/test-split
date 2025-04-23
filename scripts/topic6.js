@@ -16,6 +16,14 @@ const additionalQuestionsTopic6 = [
     }
   },
   {
+    topic: 5,
+    difficulty: "easy",
+    type: "definition",
+    question: "Use the definition of strain to determine its SI units.",
+    modelAnswer: "Strain is dimensionless.",
+    keywords: [["dimensionless"]]
+  },
+  {
     topic: 6,
     difficulty: "hard",
     type: "equation",
