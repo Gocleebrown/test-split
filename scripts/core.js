@@ -62,7 +62,7 @@ function drawWinchDiagram(canvasId, angleDeg) {
   // Label the angle a bit further out for clarity
   const midAng = -angleRad / 2;
   // push label radius out by +20 instead of +12
-  const labelRadius = arcR + 1000;
+  const labelRadius = arcR + 10;
   const labelX = originX + labelRadius * Math.cos(midAng);
   const labelY = originY + labelRadius * Math.sin(midAng);
   ctx.font      = '14px Arial';
