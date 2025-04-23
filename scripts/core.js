@@ -114,7 +114,7 @@ function drawWinchDiagram(canvasId, angleDeg) {
   ctx.fill();
 
   // 5) Leader line + “winch” label
-  const labelX2 = endX + 25;
+  const labelX2 = endX - 25;
   const labelY2 = endY - 30;
   ctx.beginPath();
   ctx.moveTo(endX, endY);
